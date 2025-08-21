@@ -859,6 +859,48 @@ public class XmlAppGUI {
             showFileProperties(selectedFile, frame);
         });
         
+        // Rename file
+        JMenuItem renameItem = new JMenuItem("Rename File");
+        renameItem.addActionListener(event -> {
+            String currentName = selectedFile.getName();
+            String nameWithoutExtension = currentName.contains(".") ? 
+                currentName.substring(0, currentName.lastIndexOf('.')) : currentName;
+            String extension = currentName.contains(".") ? 
+                currentName.substring(currentName.lastIndexOf('.')) : "";
+            
+            String newName = (String) JOptionPane.showInputDialog(frame, 
+                "Enter new filename (without extension):", 
+                "Rename File", 
+                JOptionPane.PLAIN_MESSAGE, 
+                null, 
+                null, 
+                nameWithoutExtension);
+            
+            if (newName != null && !newName.trim().isEmpty() && !newName.equals(nameWithoutExtension)) {
+                newName = newName.trim() + extension;
+                File newFile = new File(selectedFile.getParent(), newName);
+                
+                if (newFile.exists()) {
+                    JOptionPane.showMessageDialog(frame, 
+                        "A file with that name already exists!", 
+                        "Rename Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                } else if (selectedFile.renameTo(newFile)) {
+                    // Update the model with the renamed file
+                    int index = inputFilesModel.indexOf(selectedFile);
+                    inputFilesModel.removeElement(selectedFile);
+                    inputFilesModel.add(index, newFile);
+                    inputFilesList.setSelectedValue(newFile, true);
+                    showTemporaryMessage(frame, "File renamed successfully.", "Renamed");
+                } else {
+                    JOptionPane.showMessageDialog(frame, 
+                        "Failed to rename file. Check file permissions.", 
+                        "Rename Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
         // Remove from list
         JMenuItem removeItem = new JMenuItem("Remove from List");
         removeItem.addActionListener(event -> {
@@ -886,6 +928,7 @@ public class XmlAppGUI {
         contextMenu.addSeparator();
         contextMenu.add(copyPathItem);
         contextMenu.add(propertiesItem);
+        contextMenu.add(renameItem);
         contextMenu.addSeparator();
         contextMenu.add(removeItem);
         contextMenu.add(deleteItem);
@@ -986,6 +1029,48 @@ public class XmlAppGUI {
             showFileProperties(selectedFile, frame);
         });
         
+        // Rename file
+        JMenuItem renameItem = new JMenuItem("Rename File");
+        renameItem.addActionListener(event -> {
+            String currentName = selectedFile.getName();
+            String nameWithoutExtension = currentName.contains(".") ? 
+                currentName.substring(0, currentName.lastIndexOf('.')) : currentName;
+            String extension = currentName.contains(".") ? 
+                currentName.substring(currentName.lastIndexOf('.')) : "";
+            
+            String newName = (String) JOptionPane.showInputDialog(frame, 
+                "Enter new filename (without extension):", 
+                "Rename File", 
+                JOptionPane.PLAIN_MESSAGE, 
+                null, 
+                null, 
+                nameWithoutExtension);
+            
+            if (newName != null && !newName.trim().isEmpty() && !newName.equals(nameWithoutExtension)) {
+                newName = newName.trim() + extension;
+                File newFile = new File(selectedFile.getParent(), newName);
+                
+                if (newFile.exists()) {
+                    JOptionPane.showMessageDialog(frame, 
+                        "A file with that name already exists!", 
+                        "Rename Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                } else if (selectedFile.renameTo(newFile)) {
+                    // Update the model with the renamed file
+                    int index = outputFilesModel.indexOf(selectedFile);
+                    outputFilesModel.removeElement(selectedFile);
+                    outputFilesModel.add(index, newFile);
+                    outputFilesList.setSelectedValue(newFile, true);
+                    showTemporaryMessage(frame, "File renamed successfully.", "Renamed");
+                } else {
+                    JOptionPane.showMessageDialog(frame, 
+                        "Failed to rename file. Check file permissions.", 
+                        "Rename Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
         // Remove from list
         JMenuItem removeItem = new JMenuItem("Remove from List");
         removeItem.addActionListener(event -> {
@@ -1013,6 +1098,7 @@ public class XmlAppGUI {
         contextMenu.addSeparator();
         contextMenu.add(copyPathItem);
         contextMenu.add(propertiesItem);
+        contextMenu.add(renameItem);
         contextMenu.addSeparator();
         contextMenu.add(removeItem);
         contextMenu.add(deleteItem);
@@ -1166,7 +1252,29 @@ public class XmlAppGUI {
         JMenuItem exitApp = new JMenuItem("Exit");
         exitApp.addActionListener(e -> System.exit(0));
         
+        JMenuItem clearInputList = new JMenuItem("Clear Input Files");
+        clearInputList.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(frame, "Clear all input files from list?", "Confirm Clear", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                inputFilesModel.clear();
+                selectedFileLabel.setText("No file selected");
+                showTemporaryMessage(frame, "Input files list cleared", "Cleared");
+            }
+        });
+        
+        JMenuItem clearOutputList = new JMenuItem("Clear Output Files");
+        clearOutputList.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(frame, "Clear all output files from list?", "Confirm Clear", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                outputFilesModel.clear();
+                showTemporaryMessage(frame, "Output files list cleared", "Cleared");
+            }
+        });
+
         fileMenu.add(changeDefFolder);
+        fileMenu.addSeparator();
+        fileMenu.add(clearInputList);
+        fileMenu.add(clearOutputList);
         fileMenu.addSeparator();
         fileMenu.add(exitApp);
         
@@ -1226,33 +1334,11 @@ public class XmlAppGUI {
             showTemporaryMessage(frame, message, "View Mode Changed");
         });
         
-        JMenuItem clearInputList = new JMenuItem("Clear Input Files");
-        clearInputList.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(frame, "Clear all input files from list?", "Confirm Clear", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                inputFilesModel.clear();
-                selectedFileLabel.setText("No file selected");
-                showTemporaryMessage(frame, "Input files list cleared", "Cleared");
-            }
-        });
-        
-        JMenuItem clearOutputList = new JMenuItem("Clear Output Files");
-        clearOutputList.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(frame, "Clear all output files from list?", "Confirm Clear", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                outputFilesModel.clear();
-                showTemporaryMessage(frame, "Output files list cleared", "Cleared");
-            }
-        });
-        
         optionsMenu.add(enableCSV);
         optionsMenu.add(darkModeToggle);
         optionsMenu.add(autoNamingToggle);
         optionsMenu.add(defaultOutputPathToggle);
         optionsMenu.add(detailedViewToggle);
-        optionsMenu.addSeparator();
-        optionsMenu.add(clearInputList);
-        optionsMenu.add(clearOutputList);
         
         // Help Menu
         JMenu helpMenu = new JMenu("Help");
