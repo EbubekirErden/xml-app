@@ -52,11 +52,81 @@ A powerful and user-friendly Java Swing application for parsing XML files and co
 - File corruption is handled gracefully
 - Detailed error messages help troubleshooting
 
+## 🔨 Quick Start
+
+### For End Users (Pre-built)
+If you have the distribution package:
+1. **Download** the latest release from the releases page
+2. **Extract** the zip file to any folder
+3. **Double-click** `xml-parser.jar` to run the application
+   - Or use `run-xml-parser.bat` as an alternative
+   - Or run from command line: `java -jar xml-parser.jar`
+
+### For Developers (Build from Source)
+
+#### Prerequisites
+- Java 8 or higher installed
+- Git (to clone the repository)
+
+#### Build Steps
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/EbubekirErden/xml-app.git
+   cd xml-app
+   ```
+
+2. **Build the application**:
+   ```bash
+   .\build.bat
+   ```
+
+3. **Run the application**:
+   ```bash
+   cd dist
+   java -jar xml-parser.jar
+   ```
+
+#### What the Build Creates
+- `build/` - Compilation artifacts (.class files)
+- `dist/` - Distribution package ready for end users
+  - `xml-parser.jar` - Main executable
+  - `lib/` - Runtime dependencies
+  - `README.txt` - User instructions
+  - `run-xml-parser.bat` - Windows launcher
+
+#### Project Structure
+```
+xml-app/
+├── XmlAppGUI.java          # Main GUI application
+├── XmlParser.java          # XML processing logic
+├── build.bat               # Build script
+├── lib/                    # Dependencies (Apache POI, etc.)
+├── MANIFEST.MF             # JAR manifest configuration
+└── dist/                   # Distribution folder (created by build)
+    ├── xml-parser.jar      # ← Main executable
+    ├── lib/                # ← Runtime dependencies
+    ├── run-xml-parser.bat  # ← Windows launcher
+    └── README.txt          # ← User instructions
+```
+
+#### Development Notes
+- Dependencies are included in the `lib/` folder (no external downloads needed)
+- The `build/` folder contains temporary compilation files
+- Only distribute the contents of the `dist/` folder to end users
+- The root directory stays clean during development
+
 ## 🔧 Dependencies
 
 - **Apache POI**: Excel file generation and manipulation
 - **Java Swing**: GUI framework (built-in)
 - **XML Stream API**: XML parsing (built-in)
+
+## 💻 System Requirements
+
+- **Java**: Version 8 or higher
+- **Operating System**: Windows (batch files), Linux/Mac (command line)
+- **Memory**: Minimum 512MB RAM (more for large XML files)
+- **Disk Space**: ~50MB for application and dependencies
 
 ## 🖥️ Usage
 
@@ -95,5 +165,3 @@ A powerful and user-friendly Java Swing application for parsing XML files and co
 - **Data Analysis**: Prepare XML data for statistical software
 - **Legacy System Integration**: Bridge XML and spreadsheet workflows
 - **Batch Processing**: Convert multiple XML files efficiently
-
-

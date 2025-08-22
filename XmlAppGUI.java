@@ -93,6 +93,7 @@ public class XmlAppGUI {
      */
     private static void applyTheme(JFrame frame, JPanel filePanel, JPanel buttonPanel, JPanel listsPanel, 
                                    JList<File> inputList, JList<File> outputList, 
+                                   JPanel statusPanel, JLabel statusBarLabel, JLabel fileCountLabel,
                                    JButton... buttons) {
         Color bgColor = isDarkMode ? DARK_BACKGROUND : LIGHT_BACKGROUND;
         Color panelColor = isDarkMode ? DARK_PANEL : LIGHT_PANEL;
@@ -105,6 +106,17 @@ public class XmlAppGUI {
         filePanel.setBackground(panelColor);
         buttonPanel.setBackground(panelColor);
         listsPanel.setBackground(panelColor);
+        
+        // Status bar components
+        if (statusPanel != null) {
+            statusPanel.setBackground(panelColor);
+        }
+        if (statusBarLabel != null) {
+            statusBarLabel.setForeground(textColor);
+        }
+        if (fileCountLabel != null) {
+            fileCountLabel.setForeground(textColor);
+        }
         
         // Lists
         inputList.setBackground(panelColor);
@@ -786,13 +798,15 @@ public class XmlAppGUI {
             // Add components to frame
             frame.setJMenuBar(createUpperMenu(frame, fileChooser, inputFilesModel, outputFilesModel, 
                                             filePanel, buttonPanel, listsPanel, inputFilesList, outputFilesList, 
-                                            selectedFileLabel, loadFileButton, processButton, openLastButton, deleteAllButton));
+                                            selectedFileLabel, statusPanel, statusBarLabel, fileCountLabel,
+                                            loadFileButton, processButton, openLastButton, deleteAllButton));
             frame.add(filePanel, BorderLayout.NORTH);     // Top - small fixed height
             frame.add(listsPanel, BorderLayout.CENTER);   // Middle - takes remaining space
             frame.add(bottomPanel, BorderLayout.SOUTH);   // Bottom - buttons + status bar
             
             // Apply initial theme (including status bar)
             applyTheme(frame, filePanel, buttonPanel, listsPanel, inputFilesList, outputFilesList, 
+                      statusPanel, statusBarLabel, fileCountLabel,
                       loadFileButton, processButton, openLastButton, deleteAllButton);
             
             frame.setVisible(true);
@@ -1231,6 +1245,7 @@ public class XmlAppGUI {
                                           DefaultListModel<File> inputFilesModel, DefaultListModel<File> outputFilesModel,
                                           JPanel filePanel, JPanel buttonPanel, JPanel listsPanel,
                                           JList<File> inputFilesList, JList<File> outputFilesList, JLabel selectedFileLabel,
+                                          JPanel statusPanel, JLabel statusBarLabel, JLabel fileCountLabel,
                                           JButton... buttons) {
         JMenuBar menuBar = new JMenuBar();
         
@@ -1293,7 +1308,8 @@ public class XmlAppGUI {
         JCheckBoxMenuItem darkModeToggle = new JCheckBoxMenuItem("Dark Mode");
         darkModeToggle.addActionListener(e -> {
             isDarkMode = darkModeToggle.isSelected();
-            applyTheme(frame, filePanel, buttonPanel, listsPanel, inputFilesList, outputFilesList, buttons);
+            applyTheme(frame, filePanel, buttonPanel, listsPanel, inputFilesList, outputFilesList, 
+                      statusPanel, statusBarLabel, fileCountLabel, buttons);
             // Refresh the lists to update cell renderers
             inputFilesList.repaint();
             outputFilesList.repaint();
