@@ -1,7 +1,6 @@
 # XML Parser & File Manager
 
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GUI](https://img.shields.io/badge/GUI-Swing-green.svg)](https://docs.oracle.com/javase/tutorial/uiswing/)
 
 A powerful and user-friendly Java Swing application for parsing XML files and converting them to Excel (.xlsx) or CSV formats, with comprehensive file management capabilities.
